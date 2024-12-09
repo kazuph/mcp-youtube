@@ -50,7 +50,8 @@ export async function getTranscript(
   url: string,
   options: TranscriptOptions = {}
 ): Promise<string> {
-  const tempDir = options.tempDir || fs.mkdtempSync(path.join(os.tmpdir(), 'yt-'));
+  const tempDir =
+    options.tempDir || fs.mkdtempSync(path.join(os.tmpdir(), 'yt-'));
   const args = [
     '--write-sub',
     '--write-auto-sub',
@@ -71,8 +72,8 @@ export async function getTranscript(
 
     const files = fs.readdirSync(tempDir);
     console.log('Files in temp directory:', files);
-    const subtitleFiles = files.filter((file) =>
-      file.endsWith('.vtt') || file.endsWith('.srt')
+    const subtitleFiles = files.filter(
+      (file) => file.endsWith('.vtt') || file.endsWith('.srt')
     );
 
     if (subtitleFiles.length === 0) {
@@ -132,7 +133,8 @@ function cleanTranscript(content: string): string {
     // HTMLタグを削除して字幕テキストを追加
     if (isSubtitleText) {
       const cleanLine = trimmedLine.replace(/<[^>]*>/g, '').trim();
-      if (cleanLine && !seenLines.has(cleanLine)) { // 重複チェック
+      if (cleanLine && !seenLines.has(cleanLine)) {
+        // 重複チェック
         cleanedText += cleanLine + '\n';
         seenLines.add(cleanLine);
       }

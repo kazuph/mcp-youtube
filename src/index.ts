@@ -30,14 +30,14 @@ const server = new Server(
     capabilities: {
       tools: {},
     },
-  },
+  }
 );
 
 // Tool handlers
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   const tools = [
     {
-      name: 'download_youtube_url',
+      name: 'get_youtube_transcript',
       description: 'Download YouTube video transcript and metadata',
       inputSchema: zodToJsonSchema(YoutubeTranscriptSchema) as ToolInput,
     },
@@ -51,11 +51,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const { name, arguments: args } = request.params;
 
     switch (name) {
-      case 'download_youtube_url': {
+      case 'get_youtube_transcript': {
         const parsed = YoutubeTranscriptSchema.safeParse(args);
         if (!parsed.success) {
           throw new Error(
-            `Invalid arguments for download_youtube_url: ${parsed.error}`,
+            `Invalid arguments for download_youtube_url: ${parsed.error}`
           );
         }
 

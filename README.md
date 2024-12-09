@@ -6,3 +6,26 @@ Uses `yt-dlp` to download subtitles from YouTube and connects it to claude.ai vi
 
 1. Install `yt-dlp` (Homebrew and WinGet both work great here)
 1. Now, install this via [mcp-installer](https://github.com/anaisbetts/mcp-installer), use the name `@anaisbetts/mcp-youtube`
+
+### Parameters
+
+- `url`: YouTube video URL (required)
+- `language`: Subtitle language code (optional, default: 'ja')
+  - Uses [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language codes
+  - Common language codes:
+    - `ja`: Japanese
+    - `en`: English
+    - `ko`: Korean
+    - `zh`: Chinese
+    - `fr`: French
+  - Note: An error will occur if subtitles in the specified language do not exist
+
+### Example
+
+```typescript
+// Get subtitles in default language (Japanese)
+await getTranscript('https://www.youtube.com/watch?v=xxxxx');
+
+// Get subtitles in English
+await getTranscript('https://www.youtube.com/watch?v=xxxxx', { language: 'en' });
+```
