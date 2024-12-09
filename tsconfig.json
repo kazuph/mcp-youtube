@@ -10,17 +10,29 @@
     "noUnusedLocals": true,
     "noImplicitThis": true,
     "noUnusedParameters": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "pretty": true,
-    "target": "es2015",
-    "outDir": "lib",
-    "lib": ["dom", "es2015"]
+    "target": "ES2022",
+    "outDir": "dist",
+    "lib": [
+      "dom",
+      "ES2022"
+    ],
+    "types": [
+      "vitest/globals",
+      "node"
+    ]
   },
   "formatCodeOptions": {
     "indentSize": 2,
     "tabSize": 2
   },
-  "include": ["src/**/*.mts"],
-  "exclude": ["node_modules", "lib"]
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
