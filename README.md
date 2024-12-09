@@ -4,21 +4,15 @@ Uses `yt-dlp` to download subtitles from YouTube and connects it to claude.ai vi
 
 ### How do I get this working?
 
-1. Install `yt-dlp` (Homebrew and WinGet both work great here)
-   ```bash
-   # macOS
-   brew install yt-dlp
+Install `yt-dlp` (Homebrew and WinGet both work great here)
 
-   # Windows
-   winget install yt-dlp
-   ```
+```bash
+# macOS
+brew install yt-dlp
 
-2. Install this package via npm
-   ```bash
-   npm install -g @kazuph/mcp-youtube
-   ```
-
-3. Install and configure [mcp-installer](https://github.com/anaisbetts/mcp-installer)
+# Windows
+winget install yt-dlp
+```
 
 ### Parameters
 
@@ -35,10 +29,13 @@ Uses `yt-dlp` to download subtitles from YouTube and connects it to claude.ai vi
 
 ### Example
 
-```typescript
-// Get subtitles in default language (Japanese)
-await getTranscript('https://www.youtube.com/watch?v=xxxxx');
-
-// Get subtitles in English
-await getTranscript('https://www.youtube.com/watch?v=xxxxx', { language: 'en' });
+```json
+{
+  "mcpServers": {
+    "youtube": {
+      "command": "npx",
+      "args": ["-y", "@kazuph/mcp-youtube"]
+    }
+  }
+}
 ```
