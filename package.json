@@ -1,6 +1,6 @@
 {
   "name": "@kazuph/mcp-youtube",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Model Context Protocol server for YouTube - Extract subtitles from YouTube videos for Claude",
   "author": "kazuph (https://x.com/kazuph)",
   "main": "dist/index.js",
