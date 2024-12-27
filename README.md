@@ -2,6 +2,8 @@
 
 Uses `yt-dlp` to download subtitles from YouTube and connects it to claude.ai via [Model Context Protocol](https://modelcontextprotocol.io/introduction). Try it by asking Claude, "Summarize the YouTube video <<URL>>". Requires `yt-dlp` to be installed locally e.g. via Homebrew.
 
+<a href="https://glama.ai/mcp/servers/bdr6u8668a"><img width="380" height="200" src="https://glama.ai/mcp/servers/bdr6u8668a/badge" alt="@kazuph/mcp-youtube MCP server" /></a>
+
 ### How do I get this working?
 
 Install `yt-dlp` (Homebrew and WinGet both work great here)
