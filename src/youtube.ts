@@ -67,11 +67,8 @@ export async function getTranscript(
   ];
 
   try {
-    const result = await spawnPromise('yt-dlp', args);
-    console.log('yt-dlp output:', result);
-
+    await spawnPromise('yt-dlp', args);
     const files = fs.readdirSync(tempDir);
-    console.log('Files in temp directory:', files);
     const subtitleFiles = files.filter(
       (file) => file.endsWith('.vtt') || file.endsWith('.srt')
     );
@@ -99,43 +96,36 @@ export async function getTranscript(
 }
 
 function cleanTranscript(content: string): string {
-  // VTTまたはSRTファイルから余分な情報を削除し、純粋なテキストを抽出
   const lines = content.split('\n');
   let cleanedText = '';
   let isSubtitleText = false;
-  const seenLines = new Set<string>(); // 重複チェック用のSet
+  const seenLines = new Set<string>();
 
   for (const line of lines) {
     const trimmedLine = line.trim();
 
-    // 数字のみの行（字幕番号）をスキップ
     if (/^\d+$/.test(trimmedLine)) {
       continue;
     }
 
-    // タイムスタンプ行をスキップ
     if (trimmedLine.includes('-->')) {
       isSubtitleText = true;
       continue;
     }
 
-    // 空行をスキップ
     if (trimmedLine === '') {
       isSubtitleText = false;
       continue;
     }
 
-    // VTTのヘッダーをスキップ
     if (trimmedLine === 'WEBVTT') {
       continue;
     }
 
-    // HTMLタグを削除して字幕テキストを追加
     if (isSubtitleText) {
       const cleanLine = trimmedLine.replace(/<[^>]*>/g, '').trim();
       if (cleanLine && !seenLines.has(cleanLine)) {
-        // 重複チェック
-        cleanedText += cleanLine + '\n';
+        cleanedText += `${cleanLine}\n`;
         seenLines.add(cleanLine);
       }
     }
