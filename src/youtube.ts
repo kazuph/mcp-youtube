@@ -52,6 +52,10 @@ export async function getTranscript(
 ): Promise<string> {
   const tempDir =
     options.tempDir || fs.mkdtempSync(path.join(os.tmpdir(), 'yt-'));
+  
+  // Use video ID as filename to avoid "File name too long" errors
+  const shortFilenameTemplate = path.join(tempDir, '%(id)s.%(ext)s');
+  
   const args = [
     '--write-sub',
     '--write-auto-sub',
@@ -61,7 +65,7 @@ export async function getTranscript(
     '--sub-format',
     'vtt',
     '--output',
-    path.join(tempDir, '%(title)s.%(ext)s'),
+    shortFilenameTemplate,
     '--verbose',
     url,
   ];
@@ -84,6 +88,48 @@ export async function getTranscript(
 
     return cleanTranscript(content);
   } catch (error) {
+    // Check if it's a filename length error and try fallback with even shorter name
+    if (error instanceof Error && 
+        (error.message.includes('File name too long') || 
+         error.message.includes('ENOENT') || 
+         error.message.includes('Errno 36'))) {
+      
+      console.warn('Filename too long error detected, attempting fallback with timestamp-based filename');
+      
+      // Fallback: Use timestamp-based filename
+      const timestamp = Date.now();
+      const fallbackTemplate = path.join(tempDir, `yt_${timestamp}.%(ext)s`);
+      const fallbackArgs = [...args];
+      const outputIndex = fallbackArgs.indexOf('--output');
+      if (outputIndex !== -1) {
+        fallbackArgs[outputIndex + 1] = fallbackTemplate;
+      }
+      
+      try {
+        await spawnPromise('yt-dlp', fallbackArgs);
+        const files = fs.readdirSync(tempDir);
+        const subtitleFiles = files.filter(
+          (file) => file.endsWith('.vtt') || file.endsWith('.srt')
+        );
+
+        if (subtitleFiles.length === 0) {
+          throw new YouTubeError('No transcript found for this video (fallback attempt)');
+        }
+
+        const content = fs.readFileSync(
+          path.join(tempDir, subtitleFiles[0]),
+          'utf8'
+        );
+
+        return cleanTranscript(content);
+      } catch (fallbackError) {
+        if (fallbackError instanceof Error) {
+          throw new YouTubeError(`Failed to get transcript even with fallback filename: ${fallbackError.message}`);
+        }
+        throw fallbackError;
+      }
+    }
+    
     if (error instanceof Error) {
       throw new YouTubeError(`Failed to get transcript: ${error.message}`);
     }
